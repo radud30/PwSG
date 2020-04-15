@@ -1,0 +1,65 @@
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Bitmap b1 = (Bitmap)pictureBox1.Image;
+            Bitmap b2 = (Bitmap)pictureBox2.Image;
+
+            int r, g, b;
+            int[,] maska = new int[3, 3];
+
+            maska[0, 0] = (int)numericUpDown1.Value;
+            maska[0, 1] = (int)numericUpDown2.Value;
+            maska[0, 2] = (int)numericUpDown3.Value;
+            maska[1, 0] = (int)numericUpDown4.Value;
+            maska[1, 1] = (int)numericUpDown5.Value;
+            maska[1, 2] = (int)numericUpDown6.Value;
+            maska[2, 0] = (int)numericUpDown7.Value;
+            maska[2, 1] = (int)numericUpDown8.Value;
+            maska[2, 2] = (int)numericUpDown9.Value;
+
+            int suma = 0;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    suma += maska[i,j];
+                }
+            }
+
+                for (int x = 1; x < szer -1; x++)
+                {
+                    for (int y = 1; y < wys -1; y++)
+                    {
+                        Color k1 = b1.GetPixel(x - 1, y - 1);
+                        Color k2 = b1.GetPixel(x, y - 1);
+                        Color k3 = b1.GetPixel(x + 1, y - 1);
+                        Color k4 = b1.GetPixel(x - 1, y);
+                        Color k5 = b1.GetPixel(x, y);
+                        Color k6 = b1.GetPixel(x + 1, y);
+                        Color k7 = b1.GetPixel(x - 1, y + 1);
+                        Color k8 = b1.GetPixel(x, y + 1);
+                        Color k9 = b1.GetPixel(x + 1, y + 1);
+
+                        r = k1.R * maska[0, 0] + k2.R * maska[0, 1] + k3.R * maska[0, 2] + k4.R * maska[1, 0] + k5.R * maska[1, 1] + k6.R * maska[1, 2] + k7.R * maska[2, 0] + k8.R * maska[2, 1] + k9.R * maska[2, 2];
+
+                        if (suma != 0) r = r / suma;
+                        if (r > 255) r = 255;
+                        if (r < 0) r = 0;
+
+                        g = k1.G * maska[0, 0] + k2.G * maska[0, 1] + k3.G * maska[0, 2] + k4.G * maska[1, 0] + k5.G * maska[1, 1] + k6.G * maska[1, 2] + k7.G * maska[2, 0] + k8.G * maska[2, 1] + k9.G * maska[2, 2];
+
+                        if (suma != 0) g = g / suma;
+                        if (g > 255) g = 255;
+                        if (g < 0) g = 0;
+
+                        b = k1.B * maska[0, 0] + k2.B * maska[0, 1] + k3.B * maska[0, 2] + k4.B * maska[1, 0] + k5.B * maska[1, 1] + k6.B * maska[1, 2] + k7.B * maska[2, 0] + k8.B * maska[2, 1] + k9.B * maska[2, 2];
+
+                        if (suma != 0) b = b / suma;
+                        if (b > 255) b = 255;
+                        if (b < 0) b = 0;
+
+                        b2.SetPixel(x, y, Color.FromArgb(r, g, b));
+                    }
+                }
+            pictureBox2.Refresh();
+        }

@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace WindowsFormsApplication1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            int szer = panel1.ClientRectangle.Width;
+            int wys = panel1.ClientRectangle.Height;
+            int r = 50;
+            g.FillRectangle(Brushes.Yellow, szer / 2 - r, wys / 2 - r, 2 * r, 2 * r);
+
+        
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            int szer = panel2.ClientRectangle.Width;
+            int wys = panel2.ClientRectangle.Height;
+            int r = 50;
+            g.DrawEllipse(Pens.Red, szer / 2 - r, wys / 2 - r, 2 * r, 2 * r);
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            int szer = panel3.ClientRectangle.Width;
+            int wys = panel3.ClientRectangle.Height;
+            int r = 50;
+            Font myFont = new System.Drawing.Font("Helvetica", 17, FontStyle.Italic);
+            g.DrawString("Dzień", myFont, Brushes.Black, szer / 2 - r, wys / 2 - r);
+            g.DrawString("Dobry", myFont, Brushes.Black, szer / 2 - r, wys / 2);
+            
+            
+
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            int szer = panel4.ClientRectangle.Width;
+            int wys = panel4.ClientRectangle.Height;
+            int r = 50;
+            g.DrawLine(Pens.Blue, szer / 2 - r, wys / 2 - r,  r,  r);
+            g.DrawLine(Pens.Blue, szer , wys , r, r);
+            g.DrawArc(Pens.Orange, szer /2 -r , wys /2 -r , r, r, 0 , 200);
+            g.DrawRectangle(Pens.Purple, szer / 2 , wys / 2 , r,  r);
+
+        }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            int szer = panel4.ClientRectangle.Width;
+            int wys = panel4.ClientRectangle.Height;
+            int r = 50;
+            g.FillEllipse(Brushes.Green, szer / 2 - r, wys / 2 - r, 2 * r, 2 * r);
+            g.FillEllipse(Brushes.Yellow, szer / 2 - r, wys / 2 - r,  r,  r);
+            g.DrawEllipse(Pens.Red, szer / 2 , wys / 2 ,  r,  r);
+        }
+
+        private void Form1_ClientSizeChanged(object sender, EventArgs e)
+        {
+            panel1.Refresh();
+            panel2.Refresh();
+            panel3.Refresh();
+            panel4.Refresh();
+            panel5.Refresh();
+        }
+
+       
+    }
+
+}

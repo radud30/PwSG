@@ -1,0 +1,60 @@
+        public class Dane
+        {
+            public int prog1 = 0;
+            public int prog2 = 0;
+            public int m1 = 0, m2 = 0, m3 = 0, m4 = 0, m5 = 0, m6 = 0, m7 = 0, m8 = 0, m9 = 0;
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            StreamWriter sw = new StreamWriter("dane.xml");
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Dane));
+                serializer.Serialize(sw, dane);
+                sw.Close();
+            }
+            catch (Exception err)
+            {
+                Text = err.ToString();         
+            }
+            finally
+            {
+                sw.Close();
+            }
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+             if (File.Exists("dane.xml"))
+            {
+                StreamReader sr = new StreamReader("dane.xml");
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(Dane));
+                    dane = (Dane)serializer.Deserialize(sr);
+
+                    trackBar1.Value = dane.prog1;
+                    trackBar2.Value = dane.prog2;
+
+                    numericUpDown1.Value = dane.m1;
+                    numericUpDown2.Value = dane.m2;
+                    numericUpDown3.Value = dane.m3;
+                    numericUpDown4.Value = dane.m4;
+                    numericUpDown5.Value = dane.m5;
+                    numericUpDown6.Value = dane.m6;
+                    numericUpDown7.Value = dane.m7;
+                    numericUpDown8.Value = dane.m8;
+                    numericUpDown9.Value = dane.m9;
+                }
+                catch (Exception err)
+                {
+                    Text = err.ToString();
+                }
+                finally
+                {
+                    sr.Close();
+                }
+            }
+        }
