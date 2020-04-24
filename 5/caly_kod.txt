@@ -1,0 +1,247 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Xml.Serialization;
+
+namespace Gra_w_zycie
+{
+    public partial class Form1 : Form
+    {
+        public Dane dane = new Dane();
+        private bool stan = false;
+        private int[,] Plansza;
+        private int[,] temp_plansza;
+        int ROZM,pole;
+        int pokolenie = 0;
+        
+        
+
+        public Form1()
+        {
+
+            InitializeComponent();
+            button2.Enabled = false;
+            button3.Enabled = false;
+            numericUpDown2.Enabled = false;
+            label1.Text = "Pokolenie: " +pokolenie;
+            
+        }
+
+        public class Dane
+        {
+            public int wartosc_nr1, wartosc_nr2, wartosc_nr3, wartosc_nr4;
+            public int skok;
+        }
+        
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+            if (stan)
+            {
+                Graphics g = e.Graphics;
+                pole = 300 / ROZM;
+
+                for (int i = 0; i < ROZM; i++)
+                {
+                    for (int j = 0; j < ROZM; j++)
+                    {
+                        if (Plansza[i, j] == 0) g.FillRectangle(Brushes.Red, i * pole, j * pole, pole - 1, pole - 1);
+                        else g.FillRectangle(Brushes.Green, i * pole, j * pole, pole - 1, pole - 1);
+                    }
+                }
+            }
+        }
+
+        int ile_sasiadow(int x, int y)
+        {
+            int suma;
+            suma = Plansza[x-1,y-1] + Plansza[x,y-1] + Plansza[x+1,y-1] + Plansza[x-1,y] + Plansza[x+1,y] + Plansza[x-1,y+1] + Plansza[x,y+1] + Plansza[x+1,y+1];
+            return suma;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            stan = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            numericUpDown2.Enabled = true;
+
+            button1.Enabled = false;
+            numericUpDown1.Enabled = false;
+
+            pokolenie++;
+            label1.Text = "Pokolenie: " + pokolenie;
+          
+            ROZM = Decimal.ToInt32(numericUpDown1.Value);
+            Plansza = new int[ROZM, ROZM];
+
+            for (int i = 0; i < ROZM; i++)
+            {
+                for (int j = 0; j < ROZM; j++)
+                {
+                    Plansza[i, j] = 0;
+                }
+            }
+
+            // przykład ze stronki
+            Plansza[ROZM/2, ROZM/2] = 1;
+            Plansza[ROZM/2 - 1, ROZM/2] = 1;
+            Plansza[ROZM/2 +1, ROZM/2] = 1;
+            Plansza[ROZM/2 +1, ROZM/2 -1] = 1;
+            Plansza[ROZM / 2 - 1, ROZM / 2 - 1] = 1;
+            Plansza[ROZM / 2 - 1, ROZM / 2 +1] = 1;
+            Plansza[ROZM / 2 + 1, ROZM / 2 + 1] = 1;
+            Plansza[ROZM / 2 , ROZM / 2 + 1] = 1;
+           
+
+            panel1.Refresh();  
+       
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            pokolenie++;
+            label1.Text = "Pokolenie: " + pokolenie;
+            ROZM = Decimal.ToInt32(numericUpDown1.Value);
+            temp_plansza = new int[ROZM, ROZM];
+            int x, y, stana, il_sasiad;
+
+            dane.wartosc_nr1 = (int)numericUpDown3.Value;
+            dane.wartosc_nr2 = (int)numericUpDown4.Value;
+            dane.wartosc_nr3 = (int)numericUpDown5.Value;
+            dane.wartosc_nr4 = (int)numericUpDown6.Value;
+
+            for (x = 1; x < ROZM - 1; ++x)
+            {
+                for (y = 1; y < ROZM - 1; ++y)
+                {
+                    stana = Plansza[x,y];
+                    il_sasiad = ile_sasiadow(x, y);
+                    if (stana == 1)
+                    {
+                        if (il_sasiad < dane.wartosc_nr1 || il_sasiad > dane.wartosc_nr2) stana = 0;
+                    }
+                    else
+                    {
+                        if (il_sasiad <= dane.wartosc_nr3 && il_sasiad >= dane.wartosc_nr4) stana = 1;
+                    }
+                    temp_plansza[x,y] = stana;
+                }
+            }
+            for (x = 1; x < ROZM - 1; ++x)
+            {
+                for (y = 1; y < ROZM - 1; ++y)
+                {
+                    Plansza[x,y] = temp_plansza[x,y];
+                }
+            }
+            panel1.Refresh();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+            ROZM = Decimal.ToInt32(numericUpDown1.Value);
+            temp_plansza = new int[ROZM, ROZM];
+            int x, y, stana, il_sasiad;
+
+            dane.wartosc_nr1 = (int)numericUpDown3.Value;
+            dane.wartosc_nr2 = (int)numericUpDown4.Value;
+            dane.wartosc_nr3 = (int)numericUpDown5.Value;
+            dane.wartosc_nr4 = (int)numericUpDown6.Value;
+            dane.skok =  (int)numericUpDown2.Value;
+            for (int i = 0; i < dane.skok; i++)
+            {
+                pokolenie++;
+                label1.Text = "Pokolenie: " + pokolenie;
+                
+
+                for (x = 1; x < ROZM - 1; ++x)
+                {
+                    for (y = 1; y < ROZM - 1; ++y)
+                    {
+                        stana = Plansza[x, y];
+                        il_sasiad = ile_sasiadow(x, y);
+                        if (stana == 1)
+                        {
+                            if (il_sasiad < dane.wartosc_nr1 || il_sasiad > dane.wartosc_nr2) stana = 0;
+                        }
+                        else
+                        {
+                            if (il_sasiad <= dane.wartosc_nr3 && il_sasiad >= dane.wartosc_nr4) stana = 1;
+                        }
+                        temp_plansza[x, y] = stana;
+                    }
+                }
+                for (x = 1; x < ROZM - 1; ++x)
+                {
+                    for (y = 1; y < ROZM - 1; ++y)
+                    {
+                        Plansza[x, y] = temp_plansza[x, y];
+                    }
+                }
+                panel1.Refresh();
+            }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+            StreamWriter sw = new StreamWriter("dane.xml");
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Dane));
+                serializer.Serialize(sw, dane);
+                sw.Close();
+            }
+            catch (Exception err)
+            {
+                Text = err.ToString();
+            }
+            finally
+            {
+                sw.Close();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (File.Exists("dane.xml"))
+            {
+                StreamReader sr = new StreamReader("dane.xml");
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(Dane));
+                    dane = (Dane)serializer.Deserialize(sr);
+
+                    numericUpDown3.Value = dane.wartosc_nr1;
+                    numericUpDown4.Value = dane.wartosc_nr2;
+                    numericUpDown5.Value = dane.wartosc_nr3;
+                    numericUpDown6.Value = dane.wartosc_nr4;
+
+                    numericUpDown2.Value = dane.skok;
+                  
+                }
+                catch (Exception err)
+                {
+                    Text = err.ToString();
+                }
+                finally
+                {
+                    sr.Close();
+                }
+            }
+        }
+
+
+
+      
+    }
+}
